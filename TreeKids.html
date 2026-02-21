@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TREEKIDS 🌳</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI', Arial;
+background: linear-gradient(to bottom, #b7f7c1, #5fd16f);
+text-align:center;
+}
+
+header{
+background: linear-gradient(to right,#0a5f2c,#27ae60);
+color:white;
+padding:20px;
+box-shadow:0 4px 10px rgba(0,0,0,0.3);
+}
+
+.menu{
+background:#145a32;
+padding:10px;
+}
+
+.menu button{
+background:white;
+color:#145a32;
+font-weight:bold;
+}
+
+.menu button:hover{
+background:#27ae60;
+color:white;
+}
+
+button{
+padding:12px 18px;
+margin:6px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-size:16px;
+}
+
+.card{
+background:white;
+margin:20px auto;
+padding:20px;
+width:85%;
+border-radius:20px;
+box-shadow:0 6px 18px rgba(0,0,0,0.2);
+animation:fade 0.5s;
+}
+
+.hidden{
+display:none;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+.score{
+background:#0a5f2c;
+color:white;
+padding:10px;
+font-size:20px;
+}
+
+.progress{
+width:80%;
+height:20px;
+background:#ddd;
+margin:auto;
+border-radius:10px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:#27ae60;
+}
+
+.map-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:20px;
+}
+
+.map-btn{
+padding:20px;
+font-size:18px;
+background:#e8ffe8;
+}
+
+.memory-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+max-width:400px;
+margin:auto;
+}
+
+.memory-card{
+background:#145a32;
+color:white;
+font-size:30px;
+height:70px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+border-radius:10px;
+}
+
+.shop-item{
+border:2px solid #27ae60;
+padding:10px;
+margin:10px;
+border-radius:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>🌳 TREEKIDS 🌳</h1>
+<p>Explora, aprende y salva el planeta</p>
+
+</header>
+
+<div class="score">
+⭐ Puntos: <span id="puntos">0</span>
+</div>
+
+<div class="progress">
+<div class="bar" id="barra"></div>
+</div>
+
+<div class="menu">
+
+<button onclick="mostrar('inicio')">Inicio</button>
+<button onclick="mostrar('mapa')">Mapa</button>
+<button onclick="mostrar('quiz')">Quiz</button>
+<button onclick="mostrar('memoria')">Memoria</button>
+<button onclick="mostrar('tienda')">Tienda</button>
+
+</div>
+
+<!-- INICIO -->
+
+<div id="inicio" class="card">
+
+<h2>Bienvenido</h2>
+
+<p>
+Completa juegos para ganar puntos y salvar el planeta.
+</p>
+
+<img src="planeta.png" width="200">
+
+</div>
+
+<!-- MAPA REAL -->
+
+<div id="mapa" class="card hidden">
+
+<h2>🌎 Mapa del planeta</h2>
+
+<p>Haz clic en una zona para ayudar</p>
+
+<div class="map-grid">
+
+<button class="map-btn" onclick="accionMapa('bosque')">🌳 Bosque</button>
+
+<button class="map-btn" onclick="accionMapa('oceano')">🌊 Océano</button>
+
+<button class="map-btn" onclick="accionMapa('ciudad')">🏙️ Ciudad</button>
+
+<button class="map-btn" onclick="accionMapa('selva')">🌴 Selva</button>
+
+<button class="map-btn" onclick="accionMapa('desierto')">🏜️ Desierto</button>
+
+<button class="map-btn" onclick="accionMapa('artico')">❄️ Ártico</button>
+
+</div>
+
+<p id="mapaMsg"></p>
+
+</div>
+
+<!-- QUIZ REAL -->
+
+<div id="quiz" class="card hidden">
+
+<h2>Quiz ecológico</h2>
+
+<p id="pregunta"></p>
+
+<div id="respuestas"></div>
+
+<p id="quizMsg"></p>
+
+</div>
+
+<!-- MEMORIA REAL -->
+
+<div id="memoria" class="card hidden">
+
+<h2>Juego de memoria</h2>
+
+<div class="memory-grid" id="memoryGrid"></div>
+
+<p id="memoryMsg"></p>
+
+</div>
+
+<!-- TIENDA -->
+
+<div id="tienda" class="card hidden">
+
+<h2>Tienda ecológica</h2>
+
+<div class="shop-item">
+
+🌳 Árbol decorativo<br>
+
+<button onclick="comprar(50)">Comprar (50 pts)</button>
+
+</div>
+
+<div class="shop-item">
+
+🐢 Mascota tortuga<br>
+
+<button onclick="comprar(100)">Comprar (100 pts)</button>
+
+</div>
+
+<p id="shopMsg"></p>
+
+</div>
+
+<script>
+
+let puntos=0;
+
+function actualizar(){
+
+document.getElementById("puntos").innerText=puntos;
+
+document.getElementById("barra").style.width=(puntos%100)+"%";
+
+}
+
+function mostrar(id){
+
+["inicio","mapa","quiz","memoria","tienda"].forEach(sec=>{
+
+document.getElementById(sec).classList.add("hidden");
+
+});
+
+document.getElementById(id).classList.remove("hidden");
+
+}
+
+function ganar(cant){
+
+puntos+=cant;
+
+actualizar();
+
+}
+
+function accionMapa(zona){
+
+let acciones={
+
+bosque:"Plantaste árboles 🌳",
+
+oceano:"Limpiaste el océano 🌊",
+
+ciudad:"Reciclaste basura ♻️",
+
+selva:"Protegiste animales 🐒",
+
+desierto:"Plantaste plantas 🌵",
+
+artico:"Salvaste hielo ❄️"
+
+};
+
+document.getElementById("mapaMsg").innerText=acciones[zona];
+
+ganar(15);
+
+}
+
+let preguntas=[
+
+{
+
+p:"¿Qué se recicla?",
+
+r:["Botella","Comida"],
+
+c:0
+
+},
+
+{
+
+p:"¿Qué ayuda al planeta?",
+
+r:["Plantar árbol","Contaminar"],
+
+c:0
+
+},
+
+{
+
+p:"¿Qué contamina?",
+
+r:["Basura","Reciclar"],
+
+c:0
+
+}
+
+];
+
+let actual=0;
+
+function cargarQuiz(){
+
+let q=preguntas[actual];
+
+document.getElementById("pregunta").innerText=q.p;
+
+let html="";
+
+q.r.forEach((resp,i)=>{
+
+html+=`<button onclick="responder(${i})">${resp}</button>`;
+
+});
+
+document.getElementById("respuestas").innerHTML=html;
+
+}
+
+function responder(i){
+
+if(i==preguntas[actual].c){
+
+ganar(20);
+
+document.getElementById("quizMsg").innerText="Correcto";
+
+}else{
+
+document.getElementById("quizMsg").innerText="Incorrecto";
+
+}
+
+actual=(actual+1)%preguntas.length;
+
+setTimeout(cargarQuiz,1000);
+
+}
+
+cargarQuiz();
+
+let cartas=["🌳","🌳","🌊","🌊","🐢","🐢","🌎","🌎"];
+
+let seleccion=[];
+
+function crearMemoria(){
+
+let grid=document.getElementById("memoryGrid");
+
+grid.innerHTML="";
+
+cartas.sort(()=>Math.random()-0.5);
+
+cartas.forEach((c,i)=>{
+
+let div=document.createElement("div");
+
+div.className="memory-card";
+
+div.innerText="?";
+
+div.onclick=()=>voltear(div,c);
+
+grid.appendChild(div);
+
+});
+
+}
+
+function voltear(div,c){
+
+div.innerText=c;
+
+seleccion.push({div,c});
+
+if(seleccion.length==2){
+
+if(seleccion[0].c==seleccion[1].c){
+
+ganar(25);
+
+document.getElementById("memoryMsg").innerText="¡Par correcto!";
+
+}else{
+
+setTimeout(()=>{
+
+seleccion[0].div.innerText="?";
+
+seleccion[1].div.innerText="?";
+
+},500);
+
+}
+
+seleccion=[];
+
+}
+
+}
+
+crearMemoria();
+
+function comprar(precio){
+
+if(puntos>=precio){
+
+puntos-=precio;
+
+document.getElementById("shopMsg").innerText="Comprado";
+
+actualizar();
+
+}else{
+
+document.getElementById("shopMsg").innerText="No tienes puntos";
+
+}
+
+}
+
+actualizar();
+
+</script>
+
+</body>
+</html>
